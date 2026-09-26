@@ -34,8 +34,13 @@ jobs:
           cordova platform add android
           cordova build android
 
+      - name: Find and Upload APK
+        run: |
+          mkdir -p apk-output
+          find . -name "*.apk" -exec cp {} apk-output/ \;
+
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
           name: AnimeGame-APK
-          path: myapp/platforms/android/**/*.apk
+          path: apk-output/*.apk
