@@ -9,39 +9,33 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up JDK 17
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '17'
 
       - name: Set up Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '20'
 
       - name: Install Cordova
         run: npm install -g cordova
 
-      - name: Create Cordova Project & Add Web Files
+      - name: Create & Build APK
         run: |
           cordova create myapp com.anime.game AnimeGame
           rm -rf myapp/www/*
           cp -r www/* myapp/www/
           cd myapp
           cordova platform add android
-
-      - name: Build Debug APK
-        run: |
-          cd myapp
           cordova build android
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: app-debug
-          path: |
-            myapp/platforms/android/app/build/outputs/apk/debug/*.apk
-            myapp/platforms/android/app/build/outputs/apk/release/*.apk
+          name: AnimeGame-APK
+          path: myapp/platforms/android/**/*.apk
